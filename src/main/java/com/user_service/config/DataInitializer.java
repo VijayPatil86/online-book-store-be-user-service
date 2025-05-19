@@ -3,6 +3,7 @@ package com.user_service.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.user_service.entity.User;
@@ -12,6 +13,9 @@ import com.user_service.repository.UserRepository;
 public class DataInitializer implements CommandLineRunner {
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Value("${admin.name}")
 	private String adminName;
@@ -33,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
 					.name(adminName)
 					.userEmail(adminEmail)
 					.role(adminRole)
-					.password(adminPassword)
+					.password(passwordEncoder.encode(adminPassword))
 					.build();
 			userRepository.save(adminUser);
 		}
